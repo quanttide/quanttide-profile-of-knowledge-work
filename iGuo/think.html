@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>认知工程 · 备忘</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: #f0ede6;
+    padding: 40px 24px;
+    color: #2d2a26;
+  }
+  h1 {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 8px;
+    color: #5a544b;
+    margin-bottom: 36px;
+  }
+  .board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 28px;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: start;
+  }
+  .memo {
+    background: #fffef8;
+    border-radius: 4px;
+    padding: 28px 24px 24px;
+    box-shadow: 0 6px 16px rgba(60, 50, 30, 0.18);
+    position: relative;
+    border-top: 4px solid;
+  }
+  .memo:nth-child(1) { border-top-color: #c0392b; }
+  .memo:nth-child(2) { border-top-color: #d4a017; }
+  .memo:nth-child(3) { border-top-color: #2e6e4e; }
+  .memo::before {
+    content: "";
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #8a8378;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  .memo h2 {
+    font-size: 17px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+  }
+  .block { margin-bottom: 16px; }
+  .label {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+  .memo:nth-child(1) .label { background: #f5ddd9; color: #96281b; }
+  .memo:nth-child(2) .label { background: #f3e8c8; color: #8a6d08; }
+  .memo:nth-child(3) .label { background: #d8e8de; color: #1f5238; }
+  .block p, .block li {
+    font-size: 13.5px;
+    line-height: 1.8;
+  }
+  .block ul { padding-left: 18px; }
+  .open {
+    margin-top: 20px;
+    padding: 10px 12px;
+    background: #f5f2ea;
+    border-left: 3px solid #b5ac9d;
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: #6b6459;
+  }
+  .chain { color: #7a7263; }
+  .key { font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h1>认 知 工 程</h1>
+
+<div class="board">
+
+  <div class="memo">
+    <h2>拒绝与权力</h2>
+    <div class="block">
+      <span class="label">困惑</span>
+      <p>为什么“拒绝”和“权力”密切相关？</p>
+    </div>
+    <div class="block">
+      <span class="label">解释链</span>
+      <p>拒绝也是一种选择，拒绝了什么，往往意味着主动放弃了什么。拒绝能力可以体现真实权力，内部如此，外部市场也一样。</p>
+    </div>
+    <div class="block">
+      <span class="label">案例</span>
+      <p>拒绝招聘而要求课堂——承担招不到人的风险，且自己能培养。恰恰因为两点都做到：<span class="key">供给冗余</span>（有足够多候选人）＋ <span class="key">自给能力</span>（自己可以培养）。</p>
+    </div>
+    <div class="block">
+      <span class="label">机制</span>
+      <ul>
+        <li>只有供给冗余而无自给能力 → 拒绝只是挑选（议价能力）</li>
+        <li>两者都有 → 拒绝是定义自己是谁（只要经过课堂培养的人）</li>
+        <li><span class="key">权力不是拒绝本身，而是拒绝之后仍能闭环</span></li>
+      </ul>
+    </div>
+    <div class="block">
+      <span class="label">推论</span>
+      <p class="chain">拒绝是昂贵的信号 → 拒绝可以限额 → 限额可以定价</p>
+    </div>
+    <div class="open">悬而未决：“战略史是拒绝的记录”——我是在产出战略管理方法论？洞察回答“什么是对的”，方法论回答“怎么判断”。差一步：推广成判断标准。闭环案例见“实训基地的自治”。</div>
+  </div>
+
+  <div class="memo">
+    <h2>实训基地的自治</h2>
+    <div class="block">
+      <span class="label">观察</span>
+      <p>实训基地的自治正在发生。产品运营提出的第一个问题和解决方案是：用知识库解决信息混乱、大家搞不清状况的问题。</p>
+    </div>
+    <div class="block">
+      <span class="label">判据</span>
+      <p>自治的标志不是“做了事”，而是<span class="key">自己定义了问题</span>。没有等分配任务，而是自己识别问题、自己给出方案——问题定义权和方案提出权都在他们手里。这才叫自治；只是执行得好，那叫胜任。</p>
+    </div>
+    <div class="block">
+      <span class="label">闭环案例</span>
+      <p>权力不是拒绝本身，而是拒绝之后仍能闭环。拒绝招聘、要求课堂，承担了招不到人的风险——实训基地现在能自治地提出问题和方案，正是“自己培养”开始产生回报的信号。<span class="key">自治不是被培养出来的服从，而是培养的副产品里长出的主动。</span></p>
+    </div>
+    <div class="block">
+      <span class="label">信号</span>
+      <p>面对信息混乱，他们选的解法是“知识库”而不是“建个群、发个通知”——把组织问题识别为知识问题，与量潮第二大脑的定位同构。</p>
+    </div>
+  </div>
+
+  <div class="memo">
+    <h2>活的系统是自维持的</h2>
+    <div class="block">
+      <span class="label">同构</span>
+      <ul>
+        <li><span class="key">拒绝与权力</span>：拒绝之后仍能自给 → 闭环 → 权力</li>
+        <li><span class="key">思维流动</span>：流动解决阻塞 → 编辑整合 → 流出沉淀</li>
+        <li><span class="key">实训基地</span>：培养之后长出主动 → 自治 → 不再依赖外部管理</li>
+      </ul>
+    </div>
+    <div class="block">
+      <span class="label">命题</span>
+      <p><span class="key">活的系统是自维持的</span>——权力靠自给闭环，思维靠流动自组织，组织靠自治自运转。</p>
+    </div>
+    <div class="open">自我认知：我不信任“外部输入驱动”的模式（外招、被动等待任务），信任的是“内部循环生长”的模式。这可能是比任何单条洞察都更底层的自我认知。</div>
+  </div>
+
+</div>
+
+</body>
+</html>
