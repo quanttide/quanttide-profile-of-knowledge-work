@@ -1,4 +1,3 @@
-name: compare-course-profile
 description: 对比个人档案里的课程草稿与课程研发档案（正式）。产物是本任务的报告：iGuo/artifacts/report/compare-course-profile.md（判据写死了这条路径，任务名也照这个起）；跑法：kg --root <本档案> --data <本档案>/iGuo task compare-course-profile --next
 steps:
 - name: locate
@@ -30,6 +29,6 @@ steps:
   - executor: rule
     description: 结论写进报告
     file: iGuo/artifacts/report/compare-course-profile.md
-    contains: "## 结论"
+    contains: '## 结论'
   - executor: human
     description: 创始人点头（回流与并法怎么定）
