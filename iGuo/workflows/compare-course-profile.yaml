@@ -5,24 +5,24 @@ steps:
   description: 把两边的档案找齐——个人课程档案与课程研发档案，指出各自在哪、里面有什么
   executor: agent
   criteria:
-  - type: rule
+  - executor: rule
     description: 个人课程档案在
     path: data/profile/iGuo/materials/course/index.md
-  - type: rule
+  - executor: rule
     description: 课程研发档案在
     path: /home/iguo/repos/quanttide/domains/quanttide-course/data/profile/README.md
 - name: compare
   description: 逐项对照两边：口径、重叠、各自的缺口、格式差，落成一件产物
   executor: agent
   criteria:
-  - type: rule
+  - executor: rule
     description: 产物落成
     path: examples/default/data/artifacts/课程档案比对/比对.md
-  - type: rule
+  - executor: rule
     description: 产物点到两边的课
     file: examples/default/data/artifacts/课程档案比对/比对.md
     contains: production-internship
-  - type: rule
+  - executor: rule
     description: 产物给了两侧缺口
     file: examples/default/data/artifacts/课程档案比对/比对.md
     contains: 缺口
@@ -30,9 +30,9 @@ steps:
   description: 写下差异怎么处置的结论（谁回流给谁、哪些并、哪些不动），并请创始人拍板
   executor: agent
   criteria:
-  - type: rule
+  - executor: rule
     description: 结论写进产物
     file: examples/default/data/artifacts/课程档案比对/比对.md
     contains: "## 结论"
-  - type: human
+  - executor: human
     description: 创始人点头（回流与并法怎么定）
