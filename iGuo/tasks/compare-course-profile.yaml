@@ -1,10 +1,7 @@
 name: compare-course-profile
+start: 2026-09-10 22:31
 workflow: compare-course-profile
 log:
-- at: 2026-09-10 22:31
-  step: 开工
-  detail: 对比个人课程草稿与课程研发档案
-  ok: true
 - at: 2026-09-10 22:32
   step: locate
   detail: 两边档案找齐：个人草稿 iGuo/materials/course/（3 篇 MD）；课程研发档案 ../../../quanttide-course/data/profile/（3 门课，MD+JSON）；两条判据命中
