@@ -1,5 +1,5 @@
 name: compare-course-profile
-description: 对比个人档案里的课程草稿与课程研发档案（正式）。产物即本任务的报告（artifacts/report/<任务>.md，可维护）；跑法：kg --root <本档案> --data <本档案>/iGuo task compare-course-profile --next
+description: 对比个人档案里的课程草稿与课程研发档案（正式）。产物即本任务的报告，落在 iGuo/artifacts/report/（可维护）；跑法：kg --root <本档案> --data <本档案>/iGuo task compare-course-profile --next
 steps:
 - name: locate
   description: 把两边的档案找齐——个人课程草稿（iGuo/materials/course）与课程研发档案（quanttide-course），指出各自在哪、里面有什么
@@ -12,7 +12,7 @@ steps:
     description: 课程研发档案在
     path: ../../../quanttide-course/data/profile/README.md
 - name: compare
-  description: 逐项对照两边——口径、重叠、各自的缺口、格式差；把对照写进本任务的报告（{{report}} 的「比对」一节），别动程序的「执行记录」「闸门项」两节
+  description: 逐项对照两边——口径、重叠、各自的缺口、格式差；把对照写进本任务的报告 iGuo/artifacts/report/<任务>.md 的「比对」一节（判据里的 {{report}} 就是它），别动程序的「执行记录」「闸门项」两节
   executor: agent
   criteria:
   - executor: rule
@@ -24,7 +24,7 @@ steps:
     file: "{{report}}"
     contains: 缺口
 - name: conclude
-  description: 写下差异怎么处置的结论（谁回流给谁、哪些并、哪些不动），写进报告的「结论」一节，并请创始人拍板
+  description: 写下差异怎么处置的结论（谁回流给谁、哪些并、哪些不动），写进同一份报告 iGuo/artifacts/report/<任务>.md 的「结论」一节，并请创始人拍板
   executor: agent
   criteria:
   - executor: rule
