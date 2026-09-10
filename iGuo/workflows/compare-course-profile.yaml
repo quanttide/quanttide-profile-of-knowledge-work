@@ -1,5 +1,5 @@
 name: compare-course-profile
-description: 对比个人档案里的课程草稿与课程研发档案（正式）
+description: 对比个人档案里的课程蓝图草案与课程研发档案的正式蓝图
 steps:
 - name: locate
   description: 把两边的档案找齐——个人课程档案与课程研发档案，指出各自在哪、里面有什么
@@ -10,7 +10,7 @@ steps:
     path: data/profile/iGuo/materials/course/index.md
   - executor: rule
     description: 课程研发档案在
-    path: /home/iguo/repos/quanttide/domains/quanttide-course/data/profile/README.md
+    path: ../quanttide-course/data/profile/README.md
 - name: compare
   description: 逐项对照两边：口径、重叠、各自的缺口、格式差，落成一件产物
   executor: agent
