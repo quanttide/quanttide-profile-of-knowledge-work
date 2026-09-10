@@ -12,19 +12,19 @@ steps:
     description: 课程研发档案在
     path: ../../../quanttide-course/data/profile/README.md
 - name: compare
-  description: 逐项对照两边——口径、重叠、各自的缺口、格式差；产物写到 iGuo/materials/course/比对.md
+  description: 逐项对照两边——口径、重叠、各自的缺口、格式差；产物写到 iGuo/artifacts/report/compare-course-profile.md
   executor: agent
   criteria:
   - executor: rule
     description: 产物落成
-    path: iGuo/materials/course/比对.md
+    path: iGuo/artifacts/report/compare-course-profile.md
   - executor: rule
     description: 产物点到两边的课
-    file: iGuo/materials/course/比对.md
+    file: iGuo/artifacts/report/compare-course-profile.md
     contains: production-internship
   - executor: rule
     description: 产物给了两侧缺口
-    file: iGuo/materials/course/比对.md
+    file: iGuo/artifacts/report/compare-course-profile.md
     contains: 缺口
 - name: conclude
   description: 写下差异怎么处置的结论（谁回流给谁、哪些并、哪些不动），并请创始人拍板
@@ -32,7 +32,7 @@ steps:
   criteria:
   - executor: rule
     description: 结论写进产物
-    file: iGuo/materials/course/比对.md
+    file: iGuo/artifacts/report/compare-course-profile.md
     contains: "## 结论"
   - executor: human
     description: 创始人点头（回流与并法怎么定）
