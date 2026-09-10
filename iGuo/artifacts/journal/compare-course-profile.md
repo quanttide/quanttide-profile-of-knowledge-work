@@ -1,4 +1,4 @@
-# 历史：compare-course-profile
+# 日志：compare-course-profile
 
 ## 来龙去脉
 
