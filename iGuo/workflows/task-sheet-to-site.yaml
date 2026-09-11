@@ -1,0 +1,63 @@
+name: task-sheet-to-site
+description: 把一份学习任务书从个人档案送出去——先提交到 learn 的 profile（学习管理档案），再提交到 qtclass 仓的 site（量潮课堂站点内容），最后给 site 发一个新版本（推 site/* tag，触发 deploy-site 构建上传）。跨三个仓，工作区根是领域仓（quanttide-work）：learn 的档案与 qtclass 用相对路径 ../quanttide-learn/data/profile 与 ../qtclass，qtclass 需先在本地有工作副本（没克隆就先 git clone https://github.com/quanttide/qtclass.git ../qtclass）；发版走 qtcloud-devops release audit / publish。产物是本任务的报告，四节：档案 / 站点 / 发布 / 结论。跑法：qtcloud-work task --new task-sheet-to-site --workflow task-sheet-to-site，再 --next 一条一条走
+steps:
+- name: profile
+  description: 进学习档案。输入：任务书源文件 `data/profile/iGuo/artifacts/learn-profile/try-qtcloud-work-cli.md`（本仓），学习管理档案 `../quanttide-learn/data/profile`（仓 quanttide-profile-of-learning-management，内容按 learners / schedules / tasks 分）。过程：把任务书作为一份学习任务放进 `tasks/`（文件名沿用它自己那个），在那边提交推送。输出：学习档案仓里多出这一份，且改动已提交（那边工作区干净）；提交信息与文件路径抄进报告的「档案」一节。验收：见判据
+  executor: agent
+  criteria:
+  - executor: rule
+    description: 任务书进了学习档案的 tasks
+    run: test -f ../quanttide-learn/data/profile/tasks/try-qtcloud-work-cli.md
+  - executor: rule
+    description: 学习档案那边工作区干净（改动已提交）
+    run: test -z "$(git -C ../quanttide-learn/data/profile status --porcelain)"
+  - executor: rule
+    description: 写进报告
+    file: '{{report}}'
+    contains: '## 档案'
+  - executor: agent
+    description: 放的分类对（学习任务归 tasks），文件与源文件内容一致，提交信息说清了这是哪份任务书
+- name: site
+  description: 进课堂站点。输入：学习档案里那份任务书、qtclass 仓的工作副本（`../qtclass`）。过程：先看清 site 的内容怎么组织（`src/site` 下是哪套框架、内容放哪个目录、有没有既有的任务页可参照），再把任务书放进去（位置与命名照那边的惯例，别自创一套），在 qtclass 仓提交推送；把落点路径与提交信息抄进报告的「站点」一节。输出：qtclass 仓里能查到这份任务书（`git ls-files` 里看得到）。验收：见判据
+  executor: agent
+  criteria:
+  - executor: rule
+    description: qtclass 里能查到这份任务书
+    run: test -n "$(git -C ../qtclass ls-files | grep try-qtcloud-work-cli)"
+  - executor: rule
+    description: qtclass 那边工作区干净（改动已提交）
+    run: test -z "$(git -C ../qtclass status --porcelain)"
+  - executor: rule
+    description: 写进报告
+    file: '{{report}}'
+    contains: '## 站点'
+  - executor: agent
+    description: 落点照了 site 既有惯例（不是随便找个目录塞），站点里链得到、内容与档案那份一致
+- name: release
+  description: 发新版本。输入：qtclass 仓里已提交的这次改动、它现有的 site 版本号（`site/vX.Y.Z` 形，见 tag 与 CHANGELOG）。过程：先 `qtcloud-devops release audit -v site/vX.Y.Z` 预检到全过（版本、配置、CHANGELOG、工作区、标签冲突、远程），再请创始人放行，放行后 `qtcloud-devops release publish -y -v site/vX.Y.Z`——它建 tag 推远端，`deploy-site` 工作流随之构建静态站、上传 OSS 桶并刷 CDN。输出：新 tag 在远端、deploy-site 跑绿、站点可达；三样抄进报告的「发布」一节。验收：见判据
+  executor: agent
+  criteria:
+  - executor: rule
+    description: 预检全过
+    run: cd ../qtclass && qtcloud-devops release audit
+  - executor: rule
+    description: site 的 tag 已在远端
+    run: test -n "$(git -C ../qtclass ls-remote --tags origin 'site/v*')"
+  - executor: rule
+    description: 写进报告
+    file: '{{report}}'
+    contains: '## 发布'
+  - executor: agent
+    description: 新 tag 与这次内容对应（不是旧 tag 充数）；deploy-site 工作流跑绿；站点上查得到这份任务书
+  - executor: human
+    description: 创始人放行这次 site 发布（版本号与内容都对过）
+- name: conclude
+  description: 收口。输入：档案 / 站点 / 发布三节。过程：写「结论」一节——开头三行（送出去的是什么 / 现在停在哪一步 / 还差什么），随后列仍拿不准的（例如 site 的分类要不要另起一节、任务书要不要按学期归档）。输出：报告的「结论」一节。验收：见判据
+  executor: agent
+  criteria:
+  - executor: rule
+    description: 「结论」一节在
+    file: '{{report}}'
+    contains: '## 结论'
+  - executor: agent
+    description: 三行说得清送到了哪、还差什么；拿不准的单列，不混在结论里
