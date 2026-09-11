@@ -1,0 +1,81 @@
+name: code-implement-toolkit
+description: 把命令行与 studio 里意义相同的领域模型抽到 toolkit。两侧（`apps/qtcloud-work/src/cli` 的 Rust 与 `apps/qtcloud-work/src/studio` 的 Dart）现在各写了一份同样的模型——信封、执行者、步骤与判据、任务与流转账；这份活儿是把它们抽到 `packages/quanttide-work-toolkit`，Rust 与 Dart 各落一份，并用同一批用例向量做契约测试，再把两侧替换成引用 toolkit，行为一字不改（尺子为证）。产物是本任务的报告，五节：对照 / 抽取 / 契约 / 替换 / 结论。跑法：qtcloud-work task --new code-implement-toolkit --workflow code-implement-toolkit，再 --next 一条一条走
+steps:
+- name: compare
+  description: 对比两侧。输入：`apps/qtcloud-work/src/cli/src/` 里的 Rust 模型、`apps/qtcloud-work/src/studio/lib/core/` 里的 Dart 模型、尺子 `apps/qtcloud-work/src/studio/scripts/parity.sh`。过程：逐个名词找两侧意义相同的那一份（信封 `Outcome`、执行者与判据种类、工作流定义与步骤、任务与流水、闸门项与产物落点），逐项写出两侧的字段、取值、算法与报错文字，标出「完全相同 / 只差写法 / 只是同名不同义」；再跑一遍尺子，把当前的一致与缺口抄进报告的「对照」一节。输出：一张逐项对照表 + 抽取范围的建议。验收：见判据——表里每一项都要两侧都点到，漏一侧不算
+  executor: agent
+  criteria:
+  - executor: rule
+    description: 两侧现在说的是同一件事（尺子为证）
+    run: sh apps/qtcloud-work/src/studio/scripts/parity.sh
+  - executor: rule
+    description: 对照表写进报告
+    file: '{{report}}'
+    contains: '## 对照'
+  - executor: agent
+    description: 每一项都写了「完全相同 / 只差写法 / 只是同名不同义」三种里的哪一种，并指出各自在哪一行；没有「（待查）」
+  - executor: human
+    description: 创始人定抽取范围：哪些进 toolkit，哪些留在各自包里
+- name: extract
+  description: 抽进 toolkit。输入：上一步定下的范围、`packages/quanttide-work-toolkit/packages/rust/`（crate `quanttide-work`）与 `packages/quanttide-work-toolkit/packages/dart/`（包 `quanttide_work`）。过程：两侧各落一份模型——字段名、取值、算法与报错文字与原来逐字对齐（抽取不改行为）；测试跟着落，不许留空壳；两个包的清单版本与 CHANGELOG 该动就动。输出：两侧的模型与测试；搬了哪些、还留哪些，抄进报告的「抽取」一节。验收：见判据
+  executor: agent
+  criteria:
+  - executor: rule
+    description: Rust 包门禁全过（与 toolkit 的 AGENTS.md 一字不差）
+    run: cd packages/quanttide-work-toolkit/packages/rust && cargo fmt --check && cargo clippy --all-targets -- -D warnings && cargo test --locked
+  - executor: rule
+    description: Dart 包门禁全过（与 toolkit 的 AGENTS.md 一字不差）
+    run: cd packages/quanttide-work-toolkit/packages/dart && dart analyze lib/ test/ && dart test
+  - executor: rule
+    description: 抽取记录写进报告
+    file: '{{report}}'
+    contains: '## 抽取'
+  - executor: agent
+    description: 两侧同一件事的字段名与取值逐字对齐；两侧的测试都不是空壳（零条测试挡在这里）；报错文字照抄，没有顺手改写
+- name: contract
+  description: 契约测试。输入：上一步落在 toolkit 两侧的模型。过程：把契约写成**用例向量**——一批 JSON 或 YAML 文件，一对输入与期望输出，两种语言都读同一批文件；写 `packages/quanttide-work-toolkit/scripts/contract.sh`（或同等的两侧入口）跑同一批向量，两侧结论必须一样。向量要盖到每个字段与边界：缺字段、多字段、取值不对各给什么。输出：向量与契约脚本；跑一次的输出抄进报告的「契约」一节。验收：见判据
+  executor: agent
+  criteria:
+  - executor: rule
+    description: 同一批向量，两侧给同一个结论
+    run: cd packages/quanttide-work-toolkit && sh scripts/contract.sh
+  - executor: rule
+    description: 契约结果写进报告
+    file: '{{report}}'
+    contains: '## 契约'
+  - executor: agent
+    description: 向量是两侧共用的同一批文件（不是各写一份测试各说各话）；边界齐（缺字段、多字段、取值不对）；有一处故意写坏的记录，证明向量真会红
+- name: adopt
+  description: 替换到位。输入：toolkit 两侧的包、cli 与 studio。过程：两侧删掉自己的同名模型，改成引用 toolkit（Rust 走 path 依赖，Dart 走 path 依赖），先编译、再跑各自门禁、再跑尺子——行为一字不改才算过。输出：两侧的依赖改动与删掉的文件清单，抄进报告的「替换」一节。验收：见判据
+  executor: agent
+  criteria:
+  - executor: rule
+    description: 两侧都引上了 toolkit
+    run: grep -q 'quanttide-work' apps/qtcloud-work/src/cli/Cargo.toml && grep -q 'quanttide_work' apps/qtcloud-work/src/studio/pubspec.yaml
+  - executor: rule
+    description: 命令行门禁全过
+    run: cd apps/qtcloud-work/src/cli && cargo fmt --check && cargo clippy --locked --all-targets -- -D warnings && cargo test --locked
+  - executor: rule
+    description: studio 门禁全过
+    run: cd apps/qtcloud-work/src/studio && flutter analyze && flutter test
+  - executor: rule
+    description: 行为一字未改（尺子为证）
+    run: sh apps/qtcloud-work/src/studio/scripts/parity.sh
+  - executor: rule
+    description: 替换记录写进报告
+    file: '{{report}}'
+    contains: '## 替换'
+  - executor: agent
+    description: 两侧不再留同名模型（都指到 toolkit）；抽取过程中没有顺手改行为，尺子与两侧门禁都能证明
+  - executor: human
+    description: 创始人确认可以合并：抽取这件事值不值得（多一层依赖换掉两份重复）
+- name: conclude
+  description: 收口。输入：对照 / 抽取 / 契约 / 替换四节。过程：写「结论」一节——开头三行（抽了什么 / 两侧现在共用到什么程度 / 还差什么），随后列仍拿不准的（例如什么该进 toolkit、什么该留各自包；toolkit 的版本与发版节奏要不要跟两侧对齐）。输出：报告的「结论」一节。验收：见判据
+  executor: agent
+  criteria:
+  - executor: rule
+    description: 「结论」一节在
+    file: '{{report}}'
+    contains: '## 结论'
+  - executor: agent
+    description: 三行说得清抽了什么、共用到什么程度、还差什么；拿不准的单列，不混在结论里
