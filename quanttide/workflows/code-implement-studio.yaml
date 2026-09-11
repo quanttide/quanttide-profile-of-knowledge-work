@@ -1,5 +1,5 @@
 name: code-implement-studio
-description: 把 qtcloud-work 命令行的行为完整复制到 studio（同一套行为用 Dart 再实现一遍，不是包一层子进程）。尺子是 `apps/qtcloud-work/src/studio/scripts/parity.sh`——同一处工作区、同一条命令，命令行与 studio 各跑一次，输出信封（ok / columns / rows / lines）必须一样；一致 / 不一致 / 没搬 三种结论，后两种都算不过。产物是本任务的报告，五节：点货 / 搬运 / 对表 / 交接 / 结论。跑法：qtcloud-work task --new code-implement-studio --workflow code-implement-studio，再 --next 一条一条走
+description: 把 qtcloud-work 命令行的行为完整复制到 studio（同一套行为用 Dart 再实现一遍，不是包一层子进程）。尺子是 `apps/qtcloud-work/src/studio/scripts/parity.sh`——同一处工作区、同一条命令，命令行与 studio 各跑一次，算出来的结果（ok / columns / rows）必须一样——给人看的话（lines）不比，两边各写各的；只有一致才算过。产物是本任务的报告，五节：点货 / 搬运 / 对表 / 交接 / 结论。跑法：qtcloud-work task --new code-implement-studio --workflow code-implement-studio，再 --next 一条一条走
 steps:
 - name: census
   description: 点货。输入：命令行的命令面（`qtcloud-work help` 那一页）、`apps/qtcloud-work/src/cli/src/` 下的各个模块、studio 侧的 `lib/`。过程：把命令面逐条列出，每条标出 studio 侧的对应物（Dart 文件与函数）与状态——已搬 / 没搬 / 搬得不一致；再跑一遍尺子，把当前的一致与缺口原样记进报告的「点货」一节。输出：一张逐条对得上的缺口清单。验收：见判据——清单必须覆盖命令面里的每一条，漏一条不算
@@ -37,7 +37,7 @@ steps:
   executor: agent
   criteria:
   - executor: rule
-    description: 两边给的是同一个信封
+    description: 两边算出来的是同一个结果
     run: sh apps/qtcloud-work/src/studio/scripts/parity.sh
   - executor: rule
     description: 对表结果写进报告
