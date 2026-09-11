@@ -2,7 +2,7 @@ name: devops-release
 description: 给 qtcloud-work CLI 走一次预发布——定预发布版本号、把 CHANGELOG 的 Unreleased 收成版本条目、跑四道门禁、qtcloud-devops release audit 预检、--dry-run 预演、人点头、publish 真发、核 tag 已推。工作区根是领域仓（判据里的路径从仓根算）；产物是本任务的报告（缺省落草稿区，要进正式仓就在任务文件的 products.report 里写 data/report/iGuo/<名字>.md）。跑法：qtcloud-work task --new devops-release --workflow devops-release，再 --next 一条一条走
 steps:
 - name: version
-  description: 定版本。输入：`apps/qtcloud-work/src/cli/Cargo.toml` 里的现有版本、`apps/qtcloud-work/src/cli/CHANGELOG.md` 的 `[Unreleased]` 一节。过程：定预发布版本号（`X.Y.Z-pre.N`，正式发布前的每一次都用它递增），把 Unreleased 收成 `## [X.Y.Z-pre.N]` 一节并把这次变更写进去，Cargo.toml 的 `version` 跟着改。输出：改好的 CHANGELOG.md 与 Cargo.toml。验收：见判据
+  description: 定版本。输入：`apps/qtcloud-work/src/cli/Cargo.toml` 里的现有版本、`apps/qtcloud-work/src/cli/CHANGELOG.md` 的 `[Unreleased]` 一节。过程：按三档推进版本号——`alpha`（能跑，会用的人先试）→ `beta`（功能齐，等反馈）→ `rc`（候选，只修阻塞）→ 正式版；同一档内 N 递增（`X.Y.Z-alpha.1`、`-alpha.2`…），跨档换名，走完三档才发 `X.Y.Z`。把 Unreleased 收成 `## [X.Y.Z-<档>.<N>]` 一节并把这次变更写进去，Cargo.toml 的 `version` 跟着改。输出：改好的 CHANGELOG.md 与 Cargo.toml。验收：见判据
   executor: agent
   criteria:
   - executor: rule
@@ -17,8 +17,11 @@ steps:
   - executor: rule
     description: tag 前缀与版本对得上
     run: cd apps/qtcloud-work/src/cli && sh scripts/validate-version.sh "cli/v$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)"
+  - executor: rule
+    description: 版本号写法在档位上（正式版 X.Y.Z，预发布 X.Y.Z-alpha|beta|rc.N）
+    run: grep -qE '^version = "[0-9]+\.[0-9]+\.[0-9]+(-(alpha|beta|rc)\.[0-9]+)?"$' apps/qtcloud-work/src/cli/Cargo.toml
   - executor: agent
-    description: 版本号、CHANGELOG 条目、Cargo.toml 三处一致；条目里写清了这次变更，不是空条目
+    description: 版本号、CHANGELOG 条目、Cargo.toml 三处一致；档位与这次变更的性质对得上（alpha / beta / rc 各有各的门槛）；条目里写清了这次变更，不是空条目
 - name: gate
   description: 质量门禁。输入：`apps/qtcloud-work/src/cli`。过程：逐道跑，**命令与 CI（release-cli）一字不差**——CI 跑的是 `--locked`，本地只跑不带 `--locked` 的版本会漏掉「锁文件与 Cargo.toml 不同步」这一类；红了就修到绿，修完从文档改起（要改行为先改文档与测试）。输出：门禁全绿的记录（写进报告的「门禁」一节）。验收：见判据
   executor: agent
