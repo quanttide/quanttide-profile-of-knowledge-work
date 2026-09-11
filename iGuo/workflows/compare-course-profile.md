@@ -17,6 +17,5 @@
 ## 怎么跑
 
 ```bash
-kg --root <领域仓> --data <领域仓>/data/context/qtcloud-work \
-  --workflows <领域仓>/data/profile/iGuo/workflows task compare-course-profile --next
+kg --data <领域仓>/data/context/qtcloud-work task compare-course-profile --next
 ```
