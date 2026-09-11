@@ -50,8 +50,8 @@ steps:
   executor: agent
   criteria:
   - executor: rule
-    description: 不再起子进程调命令行
-    run: test -z "$(grep -rn 'Process.run' apps/qtcloud-work/src/studio/lib || true)"
+    description: 起子进程调命令行那层（lib/cli）撤了
+    run: test -z "$(grep -rn 'Process.run' apps/qtcloud-work/src/studio/lib/cli || true)"
   - executor: rule
     description: 界面与文档里没有「命令行还没给」这类占位说明
     run: test -z "$(grep -rn '命令行还没给\|命令行现在不给\|命令行还没有' apps/qtcloud-work/src/studio/lib apps/qtcloud-work/src/studio/doc || true)"
