@@ -45,7 +45,7 @@ steps:
     run: python3 -c "import json,sys; v=json.load(open('../qtclass/src/site/package.json'))['version']; sys.exit(0 if v in open('../qtclass/src/site/CHANGELOG.md').read() else 1)"
   - executor: rule
     description: 预检全过
-    run: cd ../qtclass && qtcloud-devops release audit
+    run: cd ../qtclass && qtcloud-devops release audit -v site/v0.1.2-beta.7
   - executor: rule
     description: 写进报告
     file: '{{report}}'
