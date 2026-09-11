@@ -1,0 +1,81 @@
+name: cli-to-studio
+description: 把 qtcloud-work 命令行的行为完整复制到 studio（同一套行为用 Dart 再实现一遍，不是包一层子进程）。尺子是 `apps/qtcloud-work/src/studio/scripts/parity.sh`——同一处工作区、同一条命令，命令行与 studio 各跑一次，输出信封（ok / columns / rows / lines）必须一样；一致 / 不一致 / 没搬 三种结论，后两种都算不过。产物是本任务的报告，五节：点货 / 搬运 / 对表 / 交接 / 结论。跑法：qtcloud-work task --new cli-to-studio --workflow cli-to-studio，再 --next 一条一条走
+steps:
+- name: census
+  description: 点货。输入：命令行的命令面（`qtcloud-work help` 那一页）、`apps/qtcloud-work/src/cli/src/` 下的各个模块、studio 侧的 `lib/`。过程：把命令面逐条列出，每条标出 studio 侧的对应物（Dart 文件与函数）与状态——已搬 / 没搬 / 搬得不一致；再跑一遍尺子，把当前的一致与缺口原样记进报告的「点货」一节。输出：一张逐条对得上的缺口清单。验收：见判据——清单必须覆盖命令面里的每一条，漏一条不算
+  executor: agent
+  criteria:
+  - executor: rule
+    description: 尺子跑得起来（此刻的红绿都算数，但不能跑不起来）
+    run: sh apps/qtcloud-work/src/studio/scripts/parity.sh --report
+  - executor: rule
+    description: 缺口清单写进报告
+    file: '{{report}}'
+    contains: '## 点货'
+  - executor: agent
+    description: 命令面逐条都有对应物与状态，没有一个「（待查）」；缺口的说法与尺子的结论对得上
+  - executor: human
+    description: 创始人看这份清单，确认搬运的范围（哪些先搬）
+- name: port
+  description: 搬一个模块。输入：`apps/qtcloud-work/src/cli/src/` 里的一个模块（一次只搬一个），studio 侧 `lib/core/`。过程：先读透那个模块的行为与**报错文字**，再用 Dart 实现一遍，逐条照着它的规矩写测试（同一个用例在两边同名同义）；搬完跑 studio 的门禁。输出：一个 Dart 模块 + 一组测试；这一批搬了什么、还差什么，抄进报告的「搬运」一节。验收：见判据
+  executor: agent
+  criteria:
+  - executor: rule
+    description: 静态检查过关
+    run: cd apps/qtcloud-work/src/studio && flutter analyze
+  - executor: rule
+    description: 测试全绿
+    run: cd apps/qtcloud-work/src/studio && flutter test
+  - executor: rule
+    description: 搬运记录写进报告
+    file: '{{report}}'
+    contains: '## 搬运'
+  - executor: agent
+    description: 行为逐条对上（含报错文字与边界：缺字段、多字段、取值不对各报什么）；测试里有与命令行同义的用例，不是自说自话
+- name: parity
+  description: 对表。输入：尺子 `scripts/parity.sh`、上一步搬完的模块。过程：跑一遍全量对表，把「不一致」逐条查清——是行为差异，还是序列化差异（键序、空数组、路径写法）；改到一致。输出：报告「对表」一节里贴出这一次的输出（一致多少条、还差多少条）。验收：见判据——尺子全绿才算这一步走完
+  executor: agent
+  criteria:
+  - executor: rule
+    description: 两边给的是同一个信封
+    run: sh apps/qtcloud-work/src/studio/scripts/parity.sh
+  - executor: rule
+    description: 对表结果写进报告
+    file: '{{report}}'
+    contains: '## 对表'
+  - executor: agent
+    description: 每一条不一致都查清了来路（行为差异还是序列化差异），改的是 studio 不是尺子；没搬的逐条记在看板上
+- name: handover
+  description: 交接。输入：搬完的 studio。过程：把 studio 里「起子进程调命令行」那一层撤掉，界面每一处显示都改成走 studio 自己的实现；doc 里那些「命令行还没给」的说明一并撤；再跑一遍门禁与尺子。输出：报告「交接」一节写清撤了什么、界面现在的每一处数据从哪来。验收：见判据
+  executor: agent
+  criteria:
+  - executor: rule
+    description: 不再起子进程调命令行
+    run: test -z "$(grep -rn 'Process.run' apps/qtcloud-work/src/studio/lib || true)"
+  - executor: rule
+    description: 界面与文档里没有「命令行还没给」这类占位说明
+    run: test -z "$(grep -rn '命令行还没给\|命令行现在不给\|命令行还没有' apps/qtcloud-work/src/studio/lib apps/qtcloud-work/src/studio/doc || true)"
+  - executor: rule
+    description: 静态检查过关
+    run: cd apps/qtcloud-work/src/studio && flutter analyze
+  - executor: rule
+    description: 测试全绿
+    run: cd apps/qtcloud-work/src/studio && flutter test
+  - executor: rule
+    description: 交接记录写进报告
+    file: '{{report}}'
+    contains: '## 交接'
+  - executor: agent
+    description: 界面每一处显示都能指到 studio 自己的实现；撤掉的说明没有留下悬空的引用
+  - executor: human
+    description: 创始人确认可以不再依赖命令行（studio 自己能把活干完）
+- name: conclude
+  description: 收口。输入：点货 / 搬运 / 对表 / 交接四节。过程：写「结论」一节——开头三行（搬完了什么 / 现在 studio 能不能自己干完 / 还差什么），随后列仍拿不准的（例如两边行为要不要长期双实现、以后改行为先改哪边）。输出：报告的「结论」一节。验收：见判据
+  executor: agent
+  criteria:
+  - executor: rule
+    description: 「结论」一节在
+    file: '{{report}}'
+    contains: '## 结论'
+  - executor: agent
+    description: 三行说得清搬到了哪、能不能自己干完、还差什么；拿不准的单列，不混在结论里
