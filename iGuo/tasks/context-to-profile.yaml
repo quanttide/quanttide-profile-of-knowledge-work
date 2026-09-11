@@ -26,3 +26,7 @@ log:
   step: move-out
   detail: AI 执行：move-out 完成：把 4 条已进材料的语境条目从 `data/context/iGuo/2026-09-11.md` 删净（文件留空，目录与 `.gitk
   ok: true
+- at: 2026-09-11 15:52
+  step: commit
+  detail: AI 执行：完成 `commit` 一步：材料与产物在档案仓 `data/profile`（`dbbce40`）、迁出在语境仓 `data/context`（`dc6f1b
+  ok: true

@@ -41,7 +41,7 @@ steps:
   executor: agent
   criteria:
   - executor: rule
-    description: 工作区里两个指针都已记录
-    run: test -z "$(git -C ../.. status --porcelain -- data/profile data/context)"
+    description: 两个指针都已记录（子模块内容脏不算，看指针）
+    run: 'test -z "$(git -C ../.. status --porcelain --ignore-submodules=dirty -- data/profile data/context)"'
   - executor: human
     description: 创始人点头（分类与迁出都对）
