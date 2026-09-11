@@ -1,5 +1,5 @@
-name: review-ui-shot
-description: 评审一张界面截图——人先给一句第一眼，智能体再清点、给主诊断与证据、按影响提建议、最后复述一句请人拍板。报告按倒金字塔排：第一眼 → 看到 → 主诊断 → 证据 → 旁枝 → 建议 → 结论。产物是本任务的报告；跑法：qtcloud-work task --new <任务名> --workflow review-ui-shot，再 qtcloud-work task <任务名> --next（一条一条走）
+name: design-review
+description: 评审一张界面截图——人先给一句第一眼，智能体再清点、给主诊断与证据、按影响提建议、最后复述一句请人拍板。报告按倒金字塔排：第一眼 → 看到 → 主诊断 → 证据 → 旁枝 → 建议 → 结论。产物是本任务的报告；跑法：qtcloud-work task --new <任务名> --workflow design-review，再 qtcloud-work task <任务名> --next（一条一条走）
 steps:
 - name: impression
   description: 第一眼——由人写：一句话说这张图给人的整体感受（判断，不是清点），写进报告的「第一眼」一节。人做完用 qtcloud-work task <任务名> --done impression --note "第一眼：……" 记一笔

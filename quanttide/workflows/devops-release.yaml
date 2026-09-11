@@ -1,5 +1,5 @@
-name: pre-release
-description: 给 qtcloud-work CLI 走一次预发布——定预发布版本号、把 CHANGELOG 的 Unreleased 收成版本条目、跑四道门禁、qtcloud-devops release audit 预检、--dry-run 预演、人点头、publish 真发、核 tag 已推。工作区根是领域仓（判据里的路径从仓根算）；产物是本任务的报告（缺省落草稿区，要进正式仓就在任务文件的 products.report 里写 data/report/iGuo/<名字>.md）。跑法：qtcloud-work task --new pre-release --workflow pre-release，再 --next 一条一条走
+name: devops-release
+description: 给 qtcloud-work CLI 走一次预发布——定预发布版本号、把 CHANGELOG 的 Unreleased 收成版本条目、跑四道门禁、qtcloud-devops release audit 预检、--dry-run 预演、人点头、publish 真发、核 tag 已推。工作区根是领域仓（判据里的路径从仓根算）；产物是本任务的报告（缺省落草稿区，要进正式仓就在任务文件的 products.report 里写 data/report/iGuo/<名字>.md）。跑法：qtcloud-work task --new devops-release --workflow devops-release，再 --next 一条一条走
 steps:
 - name: version
   description: 定版本。输入：`apps/qtcloud-work/src/cli/Cargo.toml` 里的现有版本、`apps/qtcloud-work/src/cli/CHANGELOG.md` 的 `[Unreleased]` 一节。过程：定预发布版本号（`X.Y.Z-pre.N`，正式发布前的每一次都用它递增），把 Unreleased 收成 `## [X.Y.Z-pre.N]` 一节并把这次变更写进去，Cargo.toml 的 `version` 跟着改。输出：改好的 CHANGELOG.md 与 Cargo.toml。验收：见判据

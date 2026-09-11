@@ -1,5 +1,5 @@
-name: optimize-workflow
-description: 优化一条工作流定义——把它从「只有验收明确」推到「输入、过程、输出、验收四段都精确」，判准是每一句声明都能派生出判据。目标定义由起任务时指定（任务名与被优化的定义同名，即 <工作流目录>/<任务名>.yaml）。产物分两份：给机器的修订稿落 <数据仓>/artifacts/proposed/<任务名>.yaml，给给人的判断落本任务的报告（主诊断置顶、结论收口，缺口与迁移进附录）。跑法：qtcloud-work task --new <目标名> --workflow optimize-workflow，再 --next
+name: code-refactor
+description: 优化一条工作流定义——把它从「只有验收明确」推到「输入、过程、输出、验收四段都精确」，判准是每一句声明都能派生出判据。目标定义由起任务时指定（任务名与被优化的定义同名，即 <工作流目录>/<任务名>.yaml）。产物分两份：给机器的修订稿落 <数据仓>/artifacts/proposed/<任务名>.yaml，给给人的判断落本任务的报告（主诊断置顶、结论收口，缺口与迁移进附录）。跑法：qtcloud-work task --new <目标名> --workflow code-refactor，再 --next
 steps:
 - name: read
   description: 读清楚。输入：目标工作流的定义文件（<工作流目录>/<任务名>.yaml）。过程：逐字段读，不猜——顶层字段、每一步的 name / executor / criteria；再把每步 description 里的散文逐条摘出来，分成四类（输入、过程、输出、验收）。输出：报告的附录「现状」一节，按四类分列，每条注明出自哪一步的哪句原文。验收：只核「读出的是不是定义里真有的」，不许补

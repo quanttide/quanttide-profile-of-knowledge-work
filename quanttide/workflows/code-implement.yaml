@@ -1,5 +1,5 @@
-name: lab-to-platform
-description: 把实验室验证过的做法扶正成平台能力——列清单、重写成三部分文档（含用例）、照用例设计测试（对账脚本 + 实现缺席时必须红）、再写实现让测试变绿。文档与测试落 apps/qtcloud-work/src/cli/；本任务的报告在 data/context/qtcloud-work/artifacts/report/lab-to-platform.md（「清单」与「对账」两节）。跑法：kg --data <领域仓>/data/context/qtcloud-work task lab-to-platform --next（工作区与工作流目录随任务记着）
+name: code-implement
+description: 把实验室验证过的做法扶正成平台能力——列清单、重写成三部分文档（含用例）、照用例设计测试（对账脚本 + 实现缺席时必须红）、再写实现让测试变绿。文档与测试落 apps/qtcloud-work/src/cli/；本任务的报告在 data/context/qtcloud-work/artifacts/report/code-implement.md（「清单」与「对账」两节）。跑法：kg --data <领域仓>/data/context/qtcloud-work task code-implement --next（工作区与工作流目录随任务记着）
 steps:
 - name: outline
   description: 逐动作、逐字段、逐判据列出这份规格要写什么，来源是实验室已经实现的东西——实验室有的不能漏，清单里也不能凭空多出没做过的事。清单写进本任务报告的「清单」一节
