@@ -26,7 +26,7 @@ steps:
   criteria:
   - executor: rule
     description: 材料库有改动
-    run: git status --porcelain -- data/profile/iGuo/materials | grep -q .
+    run: git -C data/profile status --porcelain -- iGuo/materials | grep -q .
   - executor: agent
     description: 每条都进了对应分类，写法平实，没有「不是…而是…」式表达
 - name: move-out
