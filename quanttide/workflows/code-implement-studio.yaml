@@ -1,4 +1,4 @@
-name: cli-to-studio
+name: code-implement-studio
 description: 把 qtcloud-work 命令行的行为完整复制到 studio（同一套行为用 Dart 再实现一遍，不是包一层子进程）。尺子是 `apps/qtcloud-work/src/studio/scripts/parity.sh`——同一处工作区、同一条命令，命令行与 studio 各跑一次，输出信封（ok / columns / rows / lines）必须一样；一致 / 不一致 / 没搬 三种结论，后两种都算不过。产物是本任务的报告，五节：点货 / 搬运 / 对表 / 交接 / 结论。跑法：qtcloud-work task --new cli-to-studio --workflow cli-to-studio，再 --next 一条一条走
 steps:
 - name: census
