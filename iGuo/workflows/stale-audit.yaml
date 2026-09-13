@@ -1,0 +1,55 @@
+name: stale-audit
+description: 不定期找出落后于实现的资源——规格、案例、手册、user-guide 等，它们会把旧信息喂给写程序的 AI。跑得动的检查实跑，逐条对真值（源码 / 契约向量 / 命令 --help / 规范），落后项写进报告并修。产物是本任务的报告：data/context/qtcloud-work/artifacts/report/stale-audit.md；跑法：qtcloud-work --data <领域仓>/data/context/qtcloud-work task stale-audit --next（工作区与工作流目录随任务记着）
+steps:
+- name: scan
+  description: 打样——列出 AI 写程序时会读的资源（规格在 docs/specification、案例在 docs/gallery、手册在 docs/handbook、user-guide 在 packages/quanttide-work-toolkit/docs/user-guide），挑出本次要核的入口几篇，写进报告「抽查清单」一节，并点明每篇的真值源
+  executor: agent
+  criteria:
+  - executor: rule
+    description: 报告里有「抽查清单」一节
+    file: '{{report}}'
+    contains: '## 抽查清单'
+  - executor: agent
+    description: 每篇都点明真值源——源码 / 契约向量 / 命令 --help / 规范
+- name: run-checks
+  description: 跑检查——跑得动的都实跑：工具箱的文档示例与契约向量、画廊各工作流 yaml 的校验、全仓相对链接可达性；命令与结论写进报告同一节
+  executor: agent
+  criteria:
+  - executor: rule
+    description: 文档示例与测试对得上
+    run: sh packages/quanttide-work-toolkit/scripts/doc-tests.sh
+  - executor: rule
+    description: 两侧契约向量都过
+    run: sh packages/quanttide-work-toolkit/scripts/contract.sh
+  - executor: agent
+    description: 跑不了的检查说明原因，不留空过
+- name: diff-truth
+  description: 对真值——逐条核命名、字段、取值（以源码与契约向量为准）、命令与示例（以实跑为准）、版本号与清单（以 Cargo.toml / pubspec.yaml / package.json 为准），把「资源 → 落后点 → 真值 → 怎么改」写进报告「落后清单」一节
+  executor: agent
+  criteria:
+  - executor: rule
+    description: 报告里有「落后清单」一节
+    file: '{{report}}'
+    contains: '## 落后清单'
+  - executor: agent
+    description: 每条落后项都给出真值与改法
+- name: fix
+  description: 修——把资源改到与真值一致：改规格、改案例、改手册、改 user-guide，改版本号与旧名（如 kg / find 一类已弃用称法）；需拍板的单列出来
+  executor: agent
+  criteria:
+  - executor: rule
+    description: 资源仓有改动
+    run: git status --porcelain -- docs packages | grep -q .
+  - executor: agent
+    description: 清单里每条落后项都有处置——改了，或列在待拍板
+  - executor: human
+    description: 需拍板的落后项由创始人定
+- name: commit
+  description: 落账提交——各资源仓分别提交推送（工具箱、规范、画廊、手册等），再逐层更新父仓指针；结果抄进 data/report
+  executor: agent
+  criteria:
+  - executor: rule
+    description: 相关指针都已记录（子模块内容脏不算，看指针）
+    run: 'test -z "$(git status --porcelain --ignore-submodules=dirty -- docs packages)"'
+  - executor: human
+    description: 创始人点头（落后项都处置了）
