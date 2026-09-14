@@ -13,7 +13,7 @@ steps:
     file: '{{report}}'
     contains: '## 条目清单'
 - name: classify
-  description: 逐条认归属：每条归到材料库的哪个分类（agent 智能体、connect 沟通、infra 基础设施、work 知识工作、org 组织管理、write 写作、meta 元工程、course 课程），把「条目 → 分类」写进报告的同一节；拿不准的单列出来
+  description: 逐条认归属：每条归到材料库现有的分类（以 data/profile/iGuo/materials/ 下有哪些目录为准），把「条目 → 分类」写进报告的同一节；拿不准的单列出来
   executor: agent
   criteria:
   - executor: agent
