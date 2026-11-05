@@ -12,6 +12,7 @@
 
 ### 变更
 
+- 档案内容（99 篇）自 `quanttide-profile-of-asset-management` 迁回：`quanttide/`、`quanttide-founder/`、`quanttide-tech/`
 - 全部档案内容（99 篇）并入 `quanttide-profile-of-asset-management` 的 `data/profile/`，本仓只留骨架
 
 ## [0.1.0] - 2026-09-29
