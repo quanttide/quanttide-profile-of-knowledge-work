@@ -10,10 +10,6 @@
 
 ## [Unreleased]
 
-### 新增
-
-- `quanttide-tech/github.md`：quanttide-tech 私有仓的子模块结构——公开/私有两仓、9 个子模块、指针快照
-
 ### 变更
 
 - 档案内容（99 篇）自 `quanttide-profile-of-asset-management` 迁回：`quanttide/`、`quanttide-founder/`、`quanttide-tech/`
